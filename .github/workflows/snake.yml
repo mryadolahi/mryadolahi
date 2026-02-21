@@ -1,27 +1,27 @@
-name: "Contribution Snake"
+name: Generate Snake
+
 on:
   schedule:
-    - cron: "0 0 * * *" # every day at 00:00 UTC
+    - cron: "0 0 * * *"
   workflow_dispatch:
-  push:
-    branches:
-      - main
+
+permissions:
+  contents: write
+
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Generate contribution snake
-        uses: platane/snk@v2
+
+      - name: Generate Snake
+        uses: Platane/snk@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          username: mryadolahi
-          opacity: 0.9
-          theme: default
-      - name: Commit snake
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add snake.svg || true
-          git commit -m "chore: update contribution snake" || echo "no changes to commit"
-          git push
+          github_user_name: mryadolahi
+          outputs: snake.svg
+
+      - name: Push Snake
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update snake"
